@@ -1,0 +1,118 @@
+<html>
+  <head><title>WebSocket Test</title></head>
+  <style>
+    div#messages {
+      margin: 10px;
+    }
+    div.info {
+      color: #FF4040;
+    }
+    span.user {
+      margin-right: 5px;
+      color: #808080;
+    }
+    span.message {
+      margin-left: 5px;
+    }
+  </style>
+  <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script type="text/javascript">
+    var socket = null;
+    var disconnected = true;
+
+    function send()
+    {
+      var username = $('#username').val();
+      var message = $('#message').val();
+
+      var data = JSON.stringify({"user": username, "message": message});
+
+      console.log('< sending data: ' + data);
+
+      socket.send(data);
+
+      $('#message').val('');  // clear sent message
+      $('#message').focus();  // focus on message input
+      checkInput();
+    }
+
+    function checkInput()
+    {
+      // enable/disable send button
+      $('#send').attr('disabled', $('#username').val().length <= 0 || $('#message').val().length <= 0 || disconnected);
+    }
+
+    // on document ready
+    $(document).ready(function(){
+      socket = new WebSocket('ws://localhost:8080/server')
+
+      // on connection open
+      socket.onopen = function() {
+        console.log('< connected');
+
+        var username = $('#username').val();
+        socket.send('[' + username + '] connected');
+
+        $('#messages').append(
+          $('<div></div>').attr('class', 'info').text('connected to server.')
+        );
+
+        disconnected = false;
+        checkInput();
+      };
+
+      // on message receive
+      socket.onmessage = function(data) {
+        console.log('> received data: ' + data.data);
+
+        var received = JSON.parse(data.data);
+
+        $('#messages').append(
+          $('<div></div>').attr('class', 'message')
+            .append($('<span></span>').attr('class', 'user').text(received.user))
+            .append($('<span></span>').attr('class', 'message').text(received.message))
+        );
+      };
+
+      // on connection close
+      socket.onclose = function(e) {
+        console.log('* closed with event: ' + e.code);
+
+        $('#messages').append(
+          $('<div></div>').attr('class', 'info').text('disconnected from server.')
+        );
+
+        disconnected = true;
+        checkInput();
+      };
+
+      // on change input
+      $(document).on('input', '#username,#message', function(){
+        checkInput();
+      });
+
+      // on enter key on message input
+      $('#message').keypress(function(e) {
+        if(e.which == 13) // 'enter' key
+        {
+          $('#send').click();
+          return false;  
+        }
+      }); 
+
+      // initial input check
+      checkInput();
+
+      // focus on message input
+      $('#message').focus();
+    });
+  </script>
+  <body>
+    <input id="username" type="text" value="anonymous" placeholder="username" maxlength="18" size="12" />
+    <input id="message" type="text" placeholder="your message here" maxlength="32" size="24" />
+    <input type="button" id="send" value="send" onclick="send()"></input>
+    <div id="messages">
+      <!-- messages will be added here -->
+    </div>
+  </body>
+</html>
