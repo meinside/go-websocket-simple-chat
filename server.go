@@ -1,3 +1,12 @@
+/*
+	Simple WebSocket Server with HTML client
+
+	created on : 2015.09.04.
+	last update: 2015.09.05.
+
+	meinside@gmail.com
+*/
+
 package main
 
 import (
