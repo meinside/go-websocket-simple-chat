@@ -1,8 +1,8 @@
-= Simple WebSocket Server
+# Simple WebSocket Server
 
 Built with Golang.
 
-== Usage
+## Usage
 
 ```
 $ go run server.go
