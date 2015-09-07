@@ -1,0 +1,17 @@
+/*
+ * styles.css
+ */
+
+div#messages {
+  margin: 10px;
+}
+div.info {
+  color: #FF4040;
+}
+span.user {
+  margin-right: 5px;
+  color: #808080;
+}
+span.message {
+  margin-left: 5px;
+}

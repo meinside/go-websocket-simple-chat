@@ -93,7 +93,7 @@ func main() {
 		}
 	}()
 
-	http.Handle("/", http.FileServer(http.Dir(".")))     // for serving index.html
+	http.Handle("/", http.FileServer(http.Dir("./web"))) // for serving HTML
 	http.Handle("/server", websocket.Handler(wsHandler)) // for WebSocket
 
 	fmt.Printf("> Listening on port: %d\n", Port)

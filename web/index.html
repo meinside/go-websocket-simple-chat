@@ -1,0 +1,19 @@
+<html>
+  <head><title>Simple Chat Client</title></head>
+  <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="client.js"></script>
+  <body>
+    <input id="username" type="text" value="anonymous" placeholder="username" maxlength="18" size="12" />
+    <input id="message" type="text" placeholder="your message here" maxlength="32" size="24" />
+    <input type="button" id="send" value="send" onclick="send()"></input>
+    <div id="messages">
+      <!-- messages will be added here -->
+    </div>
+    <script type="text/javascript">
+      $(document).ready(function() {
+          initClient();
+      });
+    </script>
+  </body>
+</html>
