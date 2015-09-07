@@ -1,10 +1,15 @@
-# Simple WebSocket Server
+# Simple Chat Server built with Go and WebSocket
 
-Built with Golang.
+## Install
+
+```
+$ go get -u github.com/meinside/go-websocket-simple-chat
+```
 
 ## Usage
 
 ```
+$ cd $GOPATH/src/github.com/meinside/go-websocket-simple-chat
 $ go run server.go
 ```
 
