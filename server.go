@@ -65,17 +65,19 @@ func wsHandler(ws *websocket.Conn) {
 func main() {
 	go func() {
 		var m Message
-		conns := make(map[*websocket.Conn]interface{}) // empty connections' set
+		conns := make(map[*websocket.Conn]struct{}) // empty connections' set
 		for {
 			select {
 			case conn := <-cConn:
-				conns[conn] = true // add connection to set
+				conns[conn] = struct{}{} // add connection to the set
 
 				fmt.Printf("> connected (total %d connections)\n", len(conns))
 			case conn := <-cDisconn:
-				delete(conns, conn) // remove connection from set
+				if _, ok := conns[conn]; ok { // check if it exists in the set
+					delete(conns, conn) // remove connection from the set
 
-				fmt.Printf("> diconnected (total %d connections)\n", len(conns))
+					fmt.Printf("> diconnected (total %d connections)\n", len(conns))
+				}
 			case data := <-cData:
 				if err := json.Unmarshal(data, &m); err == nil { // when it is in JSON format,
 					fmt.Printf("> [%s] %s\n", m.User, m.Message)
