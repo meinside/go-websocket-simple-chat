@@ -35,6 +35,7 @@ type Message struct {
 
 // connection channels
 var cConn = make(chan *websocket.Conn, NumChannels)
+var cDisconn = make(chan *websocket.Conn, NumChannels)
 
 // data channels
 var cData = make(chan []byte, NumChannels)
@@ -56,26 +57,34 @@ func wsHandler(ws *websocket.Conn) {
 		}
 	}
 
+	cDisconn <- ws
+
 	ws.Close()
 }
 
 func main() {
 	go func() {
 		var m Message
-		conns := []*websocket.Conn{} // empty connection array
+		conns := make(map[*websocket.Conn]interface{}) // empty connections' set
 		for {
 			select {
 			case conn := <-cConn:
-				conns = append(conns, conn) // add connection to array
+				conns[conn] = true // add connection to set
+
+				fmt.Printf("> connected (total %d connections)\n", len(conns))
+			case conn := <-cDisconn:
+				delete(conns, conn) // remove connection from set
+
+				fmt.Printf("> diconnected (total %d connections)\n", len(conns))
 			case data := <-cData:
-				if err := json.Unmarshal(data, &m); err == nil {
+				if err := json.Unmarshal(data, &m); err == nil { // when it is in JSON format,
 					fmt.Printf("> [%s] %s\n", m.User, m.Message)
 
 					// broadcast to all connections
-					for _, conn := range conns {
+					for conn, _ := range conns {
 						conn.Write(data)
 					}
-				} else {
+				} else { // when it is not in JSON format,
 					fmt.Printf("> %s\n", string(data))
 				}
 			}
