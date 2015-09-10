@@ -27,9 +27,14 @@ function checkInput()
   $('#send').attr('disabled', $('#username').val().length <= 0 || $('#message').val().length <= 0 || disconnected);
 }
 
-function initClient()
+/* 
+ * connect to given websocket url, and setup various callback functions
+ *
+ * @param wsUrl [string] WebSocket URL
+ */
+function initClient(wsUrl)
 {
-  socket = new WebSocket('ws://localhost:8080/server')
+  socket = new WebSocket(wsUrl);
 
   // on connection open
   socket.onopen = function() {

@@ -4,27 +4,39 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width">
     <!-- jQuery 2.1.4 -->
-    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <!-- Bootstrap 3.3.5 -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <!-- // -->
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="/styles.css">
     <script src="/client.js"></script>
   </head>
   <body>
-    <input id="username" type="text" value="anonymous" placeholder="username" maxlength="18" size="12" />
-    <input id="message" type="text" placeholder="your message here" maxlength="32" size="24" />
-    <input type="button" id="send" value="send" onclick="send()"></input>
-    <div id="messages">
-      <!-- messages will be added here -->
+    <div id="notice"></div>
+    <div class="chatui">
+      <input id="username" type="text" value="anonymous" placeholder="username" maxlength="18" size="12" />
+      <input id="message" type="text" placeholder="your message here" maxlength="32" size="24" />
+      <input type="button" id="send" value="send" onclick="send()"></input>
+      <div id="messages">
+        <!-- messages will be added here -->
+      </div>
     </div>
     <script type="text/javascript">
       // on page load,
       $(document).ready(function() {
-          initClient(); //initialize web client
+          var webUrl = window.location.href;
+          var wsUrl = webUrl.replace(/^http(s?):\/\//, "ws$1://") + "server";
+
+          // show connection instruction
+          $('#notice').append(
+            $('<span></span>').html('* connect through: <a href="' + webUrl + '" target="_blank">' + webUrl + '</a> or <a href="' + wsUrl + '" target="_blank">' + wsUrl + '</a>')
+          );
+
+          // initialize web client
+          initClient(wsUrl);
       });
     </script>
   </body>

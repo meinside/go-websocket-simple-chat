@@ -10,6 +10,12 @@ body {
   padding: 30px 15px 15px;
 }
 
+div#notice {
+  margin: 0 10px 10px 10px;
+  color: #606060;
+}
+div#chatui {
+}
 div#messages {
   margin: 10px;
 }
