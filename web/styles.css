@@ -2,6 +2,14 @@
  * styles.css
  */
 
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  padding: 30px 15px 15px;
+}
+
 div#messages {
   margin: 10px;
 }
